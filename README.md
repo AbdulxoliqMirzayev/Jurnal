@@ -67,12 +67,13 @@ Bot start paytida MVP qulayligi uchun SQLAlchemy `create_all` ham ishlaydi. Prod
 
 ```bash
 source .venv/bin/activate
-python -m app.main
+python run_bot.py
 ```
 
-Entrypoint:
+Alternative entrypoint:
 
 ```bash
+python -m app.main
 python main.py
 ```
 
