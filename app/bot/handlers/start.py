@@ -16,6 +16,7 @@ from app.database.repositories.deposit_repo import DepositRepository
 from app.database.repositories.user_repo import UserRepository
 from app.services.ai_service import IronAIService
 from app.utils.formatters import money
+from app.utils.finance_math import calculate_compound_projection_for_days, calculate_risk_amount
 from app.utils.menu_lifecycle import clean_answer, clean_callback_answer
 from app.utils.message_manager import delete_tracked_messages, track_message
 from app.utils.stickers import safe_send_animation, safe_send_sticker
@@ -156,13 +157,11 @@ async def save_risk_type(callback: CallbackQuery, state: FSMContext, session: As
         await clean_callback_answer(callback, "Odatda bitta savdoda depositning nechchi foizini risk qilasiz?")
         return
     mapping = {"conservative": 1.0, "normal": 3.0, "aggressive": 5.0}
-    await DepositRepository(session).set_risk(db_user, risk_type, mapping[risk_type])
+    profile = await DepositRepository(session).set_risk(db_user, risk_type, mapping[risk_type])
     await state.clear()
     await clean_callback_answer(
         callback,
-        "✅ Risk sozlamalari saqlandi.\n\n"
-        "🏠 <b>Iron Trade asosiy menyusi tayyor.</b>\n"
-        "Savdoni jurnalga yozing yoki Iron AI’dan savol so‘rang.",
+        _risk_projection_message(float(profile.deposit_current or 0), mapping[risk_type]),
         reply_markup=main_menu(db_user.language),
     )
 
@@ -173,10 +172,10 @@ async def save_custom_risk(message: Message, state: FSMContext, session: AsyncSe
     if risk is None or risk > 100:
         await message.answer("Risk foizini to‘g‘ri kiriting. Masalan: 2 yoki 3.5")
         return
-    await DepositRepository(session).set_risk(db_user, "custom", risk)
+    profile = await DepositRepository(session).set_risk(db_user, "custom", risk)
     await state.clear()
     await message.answer(
-        f"✅ Custom risk saqlandi: <b>{risk:g}%</b>\n\n🏠 Asosiy menyu tayyor.",
+        _risk_projection_message(float(profile.deposit_current or 0), risk),
         reply_markup=main_menu(db_user.language),
     )
 
@@ -212,4 +211,28 @@ def _strategy_prompt(trading_type: str) -> str:
         "⚖️ Odatda nechchi foiz risk qilasiz?\n"
         "📊 Strategiyangiz SMC, ICT, Price Action, Indicator, News yoki aralash usulmi?\n\n"
         "Bu kelajakda savdolaringizni aniqroq tahlil qilishimga yordam beradi."
+    )
+
+
+def _risk_projection_message(deposit: float, risk_percent: float) -> str:
+    risk_amount = calculate_risk_amount(deposit, risk_percent)
+    projection = calculate_compound_projection_for_days(deposit, risk_percent)
+    return (
+        "✅ <b>Risk sozlamalari saqlandi.</b>\n\n"
+        "🧮 <b>Sizning risk rejangiz</b>\n"
+        f"💼 Deposit: <b>{money(deposit)}</b>\n"
+        f"⚖️ Tanlangan risk: <b>{risk_percent:g}%</b>\n"
+        f"💵 1 ta savdoda maksimal risk: <b>{money(risk_amount)}</b>\n\n"
+        "📈 <b>Matematik compound ssenariy</b>\n"
+        f"Agar har trading kuni o‘rtacha <b>+{risk_percent:g}%</b> intizomli natija qilsangiz:\n"
+        f"• 3 trading kunda: <b>{money(projection[3])}</b>\n"
+        f"• 60 trading kunda: <b>{money(projection[60])}</b>\n"
+        f"• 100 trading kunda: <b>{money(projection[100])}</b>\n"
+        f"• 1 yildan keyin, taxminan 240 trading kun: <b>{money(projection[240])}</b>\n\n"
+        "🧠 <b>Iron AI sizga qanday yordam beradi?</b>\n"
+        "Men har savdoni jurnalga tushirib, strategiyangizni, riskni, emotionni va takroriy xatolarni tahlil qilaman. "
+        "Maqsad shunchaki ko‘p trade qilish emas — reja bilan kirish, riskni asrash va intizomni kuchaytirish.\n\n"
+        "Birgalikda strategiyangizni tahlil qilib, qaysi joyda kuchli va qaysi joyda depositga zarar kelayotganini topamiz.\n\n"
+        "⚠️ Bu kafolatlangan foyda emas va moliyaviy maslahat emas. Bu faqat matematik taxmin va trading jurnal intizomi uchun yo‘l xaritasi.\n\n"
+        "🏠 <b>Iron Trade asosiy menyusi tayyor.</b>"
     )

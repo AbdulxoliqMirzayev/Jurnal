@@ -1,18 +1,22 @@
 from __future__ import annotations
 
 TRADING_DAYS = {
+    "3_days": 3,
     "1_week": 5,
     "1_month": 20,
     "3_months": 60,
+    "100_days": 100,
     "6_months": 120,
     "1_year": 240,
     "5_years": 1200,
 }
 
 PERIOD_LABELS_UZ = {
+    "3_days": "3 trading kunda",
     "1_week": "1 haftada",
     "1_month": "1 oyda",
     "3_months": "3 oyda",
+    "100_days": "100 trading kunda",
     "6_months": "6 oyda",
     "1_year": "1 yilda",
     "5_years": "5 yilda",
@@ -22,8 +26,20 @@ PERIOD_LABELS_UZ = {
 def calculate_compound_projection(balance: float, daily_percent: float) -> dict[str, float]:
     result: dict[str, float] = {}
     for period, days in TRADING_DAYS.items():
-        result[period] = balance * ((1 + daily_percent / 100) ** days)
+        result[period] = calculate_compound_amount(balance, daily_percent, days)
     return result
+
+
+def calculate_compound_amount(balance: float, daily_percent: float, trading_days: int) -> float:
+    return float(balance) * ((1 + float(daily_percent) / 100) ** int(trading_days))
+
+
+def calculate_compound_projection_for_days(
+    balance: float,
+    daily_percent: float,
+    trading_days: tuple[int, ...] = (3, 60, 100, 240),
+) -> dict[int, float]:
+    return {days: calculate_compound_amount(balance, daily_percent, days) for days in trading_days}
 
 
 def money_text(value: float | int | None) -> str:
