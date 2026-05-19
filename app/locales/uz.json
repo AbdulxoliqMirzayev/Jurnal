@@ -1,0 +1,36 @@
+{
+  "brand": {
+    "bot_name": "Iron Trade",
+    "ai_name": "Iron AI"
+  },
+  "common": {
+    "main_menu": "🏠 Asosiy menyu",
+    "disclaimer": "Bu moliyaviy maslahat emas, faqat jurnal va ta’limiy tahlil.",
+    "saved": "✅ Saqlandi",
+    "cancelled": "❌ Bekor qilindi"
+  },
+  "start": {
+    "welcome": "👋 Assalomu alaykum, do‘stim!\n\nMen Iron AI’man — sizning shaxsiy trading jurnal yordamchingizman.",
+    "choose_language": "Iltimos, tilni tanlang:",
+    "trading_type": "📊 Siz qaysi yo‘nalishda savdo qilasiz?",
+    "deposit": "💼 Balansingizda qancha deposit bor?",
+    "risk": "⚖️ Risk turini tanlang:"
+  },
+  "journal": {
+    "prompt": "📘 Bugungi savdolaringizni jurnalga yozamiz, do‘stim.",
+    "missing": "⚠️ Do‘stim, ma’lumot deyarli tayyor. Faqat ayrim maydonlar yetishmayapti.",
+    "saved": "📘 Savdo jurnalingiz saqlandi"
+  },
+  "menu": {
+    "journal": "📘 Trading jurnal",
+    "strategy": "🧠 Strategiya tahlili",
+    "risk": "🧮 Risk kalkulyator",
+    "stats": "📊 Statistika",
+    "rating": "📈 Instrument reytingi",
+    "export": "📄 Export",
+    "reminders": "⏰ Eslatmalar",
+    "settings": "⚙️ Sozlamalar",
+    "feedback": "💬 Taklif va murojaat",
+    "ai_help": "🤖 Iron AI yordam"
+  }
+}

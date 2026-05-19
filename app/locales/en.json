@@ -1,0 +1,36 @@
+{
+  "brand": {
+    "bot_name": "Iron Trade",
+    "ai_name": "Iron AI"
+  },
+  "common": {
+    "main_menu": "🏠 Main menu",
+    "disclaimer": "This is not financial advice, only journal-based educational analysis.",
+    "saved": "✅ Saved",
+    "cancelled": "❌ Cancelled"
+  },
+  "start": {
+    "welcome": "👋 Hello, friend!\n\nI am Iron AI — your personal trading journal assistant.",
+    "choose_language": "Please choose a language:",
+    "trading_type": "📊 What do you trade?",
+    "deposit": "💼 How much deposit do you have?",
+    "risk": "⚖️ Choose your risk type:"
+  },
+  "journal": {
+    "prompt": "📘 Let’s record today’s trades, friend.",
+    "missing": "⚠️ Friend, the journal is almost ready. A few fields are missing.",
+    "saved": "📘 Your trade journal was saved"
+  },
+  "menu": {
+    "journal": "📘 Trading journal",
+    "strategy": "🧠 Strategy analysis",
+    "risk": "🧮 Risk calculator",
+    "stats": "📊 Statistics",
+    "rating": "📈 Instrument rating",
+    "export": "📄 Export",
+    "reminders": "⏰ Reminders",
+    "settings": "⚙️ Settings",
+    "feedback": "💬 Feedback",
+    "ai_help": "🤖 Iron AI help"
+  }
+}
